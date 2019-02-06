@@ -15,7 +15,6 @@ class HoobsKubes
   end
 
   def self.status
-    log "#{current_context} Cluster Status:".bold.cyan
     pretty_print_table "nodes"
     pretty_print_table "pods"
     pretty_print_table "deployments"

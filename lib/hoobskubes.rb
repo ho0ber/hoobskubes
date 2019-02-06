@@ -66,21 +66,31 @@ class HoobsKubes
     end
   end
 
+  def self.do_status
+    log "#{current_context} Cluster Status:".bold.cyan
+    status
+  end
+
+  def self.do_deploy
+    begin
+      log "Starting deploy".bold.cyan
+      deploy
+      log "Done!".bold.green
+    rescue
+      log "Error!".bold.red
+      raise
+    end
+
+    do_status
+  end
+
   def self.run(dir)
     @@dir = dir
 
     if ARGV.length == 0
-      begin
-        log "Starting deploy".bold.cyan
-        deploy
-        log "Done!".bold.green
-        status
-      rescue
-        log "Error!".bold.red
-        raise
-      end
+      do_deploy
     elsif ARGV.include? "-s" or ARGV.include? "--status"
-      status
+      do_status
     elsif ARGV.include? "-c" or ARGV.include? "--change-context"
       change_context
     elsif ARGV.include? "--help"
@@ -90,7 +100,6 @@ class HoobsKubes
       log "Options:"
       log "  --help      : This message"
       log "  -s --status : Display only status"
-
     else
       log "Unknown usage: deploy.rb #{ARGV.join " "}"
     end
