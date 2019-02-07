@@ -15,9 +15,10 @@ class HoobsKubes
 
   def self.pretty_print_table(resource, namespace=nil)
     extra = resource == "nodes" ? " -Lbeta.kubernetes.io/instance-type -Lfailure-domain.beta.kubernetes.io/zone" : ""
+    all = @@all ? " --all-namespaces" : ""
 
     if namespace.nil?
-      out = %x{kubectl get #{resource}#{extra}}
+      out = %x{kubectl get #{resource}#{extra}#{all}}
       label = resource.capitalize
     else
       out = %x{kubectl get #{resource} --namespace=#{namespace}#{extra}}
@@ -52,6 +53,8 @@ class HoobsKubes
           line = line.strip.bold.green
         elsif line.include? "configured"
           line = line.strip.bold.brown
+        elsif line.include? "created"
+          line = line.strip.bold.magenta
         else
           line = line.strip.bold.red
         end
@@ -86,6 +89,7 @@ class HoobsKubes
 
   def self.run(dir)
     @@dir = dir
+    @@all = (ARGV.include? "--all" or ARGV.include? "-a")
 
     if ARGV.length == 0
       do_deploy
