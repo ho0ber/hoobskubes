@@ -1,3 +1,6 @@
+require 'optparse'
+require 'ostruct'
+
 class HoobsKubes
   def self.current_context
     %x{kubectl config current-context}.strip
@@ -15,7 +18,7 @@ class HoobsKubes
 
   def self.pretty_print_table(resource, namespace=nil)
     extra = resource == "nodes" ? " -Lbeta.kubernetes.io/instance-type -Lfailure-domain.beta.kubernetes.io/zone" : ""
-    all = @@all ? " --all-namespaces" : ""
+    all = @@options.all ? " --all-namespaces" : ""
 
     if namespace.nil?
       out = %x{kubectl get #{resource}#{extra}#{all}}
@@ -89,23 +92,32 @@ class HoobsKubes
 
   def self.run(dir)
     @@dir = dir
-    @@all = (ARGV.include? "--all" or ARGV.include? "-a")
+    @@options = OpenStruct.new
+    @@options.status = false
+    @@options.all = false
+    @@options.change = false
 
-    if ARGV.length == 0
-      do_deploy
-    elsif ARGV.include? "-s" or ARGV.include? "--status"
-      do_status
-    elsif ARGV.include? "-c" or ARGV.include? "--change-context"
-      change_context
-    elsif ARGV.include? "--help"
-      log "Usage: ./deploy.rb [options]"
-      log "  With no options, this will apply yamls and display status"
-      log ""
-      log "Options:"
-      log "  --help      : This message"
-      log "  -s --status : Display only status"
+    OptionParser.new do |opts|
+      opts.banner = "Usage: deploy.rb [options]"
+
+      opts.on("-s", "--status", "Displays status only") do |v|
+        @@options.status = true
+      end
+
+      opts.on("-a", "--all", "Displays status for all namespaces") do |v|
+        @@options.all = true
+      end
+
+      opts.on("-c", "--change-context", "Change context without deploying") do |v|
+        @@options.change = true
+      end
+    end.parse!
+
+    if @@options.status or @@options.change
+      change_context if @@options.change
+      do_status if @@options.status
     else
-      log "Unknown usage: deploy.rb #{ARGV.join " "}"
+      do_deploy
     end
   end
 end
