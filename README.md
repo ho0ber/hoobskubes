@@ -1,5 +1,5 @@
 # hoobskubes
-Terrible kubes tools
+Kubernetes configuration deployment
 
 https://rubygems.org/gems/hoobskubes
 
