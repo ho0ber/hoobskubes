@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: example-app
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - image: example/example-app
+        imagePullPolicy: Always
+        name: example-app
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: example-app
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: example-app

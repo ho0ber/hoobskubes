@@ -3,7 +3,7 @@ Gem::Specification.new do |s|
   s.version     = "0.0.4"
   s.date        = "2019-02-06"
   s.summary     = "HoobsKubes"
-  s.description = "Terrible kubernetes tools"
+  s.description = "Kubernetes configuration deployment"
   s.authors     = ["Samuel Colburn"]
   s.email       = "samuel.colburn@gmail.com"
   s.files       = ["lib/hoobskubes.rb"]
