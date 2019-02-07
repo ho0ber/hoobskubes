@@ -62,3 +62,5 @@ end
 * Context-safety and switching (don't apply a bunch of config to the wrong cluster!)
 * Command-line options to just show status or change context
 * Extensibility! There's a lot of stuff we could do to make this more useful.
+
+See [examples](examples/) for a more complete example
