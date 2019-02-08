@@ -18,6 +18,7 @@ class HoobsKubes
 
   def self.pretty_print_table(resource, namespace=nil)
     extra = resource == "nodes" ? " -Lbeta.kubernetes.io/instance-type -Lfailure-domain.beta.kubernetes.io/zone -Lkops.k8s.io/instancegroup" : ""
+    extra += " -o wide" if @@options.wide
     all = @@options.all ? " --all-namespaces" : ""
 
     if namespace.nil?
@@ -95,6 +96,7 @@ class HoobsKubes
     @@options = OpenStruct.new
     @@options.status = false
     @@options.all = false
+    @@options.wide = false
     @@options.change = false
     @@options.resource = ""
 
@@ -107,6 +109,10 @@ class HoobsKubes
 
       opts.on("-a", "--all", "Displays status for all namespaces") do |v|
         @@options.all = true
+      end
+
+      opts.on("-w", "--wide", "Displays wide status") do |v|
+        @@options.wide = true
       end
 
       opts.on("-c", "--change-context", "Change context without deploying") do |v|
