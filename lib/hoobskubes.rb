@@ -96,6 +96,7 @@ class HoobsKubes
     @@options.status = false
     @@options.all = false
     @@options.change = false
+    @@options.resource = ""
 
     OptionParser.new do |opts|
       opts.banner = "Usage: deploy.rb [options]"
@@ -111,12 +112,18 @@ class HoobsKubes
       opts.on("-c", "--change-context", "Change context without deploying") do |v|
         @@options.change = true
       end
+
+      opts.on("-r", "--resource [RESOURCE]", "Diplay status for only a specific resource") do |v|
+        @@options.resource = v
+      end
     end.parse!
 
-    if @@options.status or @@options.change
-      change_context if @@options.change
-      do_status if @@options.status
-    else
+    change_context if @@options.change
+    if @@options.resource != ""
+      pretty_print_table(@@options.resource)
+    elsif @@options.status
+      do_status
+    elsif !@@options.change
       do_deploy
     end
   end
