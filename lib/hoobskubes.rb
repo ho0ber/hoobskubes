@@ -17,7 +17,7 @@ class HoobsKubes
   end
 
   def self.pretty_print_table(resource, namespace=nil)
-    extra = resource == "nodes" ? " -Lbeta.kubernetes.io/instance-type -Lfailure-domain.beta.kubernetes.io/zone" : ""
+    extra = resource == "nodes" ? " -Lbeta.kubernetes.io/instance-type -Lfailure-domain.beta.kubernetes.io/zone -Lkops.k8s.io/instancegroup" : ""
     all = @@options.all ? " --all-namespaces" : ""
 
     if namespace.nil?
