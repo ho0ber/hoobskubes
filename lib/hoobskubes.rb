@@ -91,6 +91,22 @@ class HoobsKubes
     do_status
   end
 
+  def self.do_proxy
+    begin
+      log "Starting proxy".bold.cyan
+      proxy_thread = Thread.new do
+        %x{kubectl proxy}
+      end
+      log "Opening URL for #{@@options.proxy.to_s.green}".bold.cyan
+      %x{open "http://127.0.0.1:8001/api/v1/namespaces/default/services/#{@@options.proxy}/proxy/"}
+      proxy_thread.join
+    rescue Interrupt
+      puts ""
+      log "Caught interrupt".bold.magenta
+    end
+    log "Exited proxy".bold.green
+  end
+
   def self.run(dir)
     @@dir = dir
     @@options = OpenStruct.new
@@ -122,15 +138,23 @@ class HoobsKubes
       opts.on("-r", "--resource [RESOURCE]", "Diplay status for only a specific resource") do |v|
         @@options.resource = v
       end
+
+      opts.on("-p", "--proxy [SERVICE]", "Runs kubectl proxy and opens the service's proxy URL") do |v|
+        @@options.proxy = v
+      end
     end.parse!
 
     change_context if @@options.change
-    if @@options.resource != ""
-      pretty_print_table(@@options.resource)
-    elsif @@options.status
-      do_status
-    elsif !@@options.change
-      do_deploy
+    if @@options.proxy
+      do_proxy
+    else
+      if @@options.resource != ""
+        pretty_print_table(@@options.resource)
+      elsif @@options.status
+        do_status
+      elsif !@@options.change
+        do_deploy
+      end
     end
   end
 end

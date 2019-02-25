@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = "hoobskubes"
-  s.version     = "0.0.8"
+  s.version     = "0.0.9"
   s.date        = "2019-02-06"
   s.summary     = "HoobsKubes"
   s.description = "Kubernetes configuration deployment"
