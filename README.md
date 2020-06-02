@@ -3,7 +3,7 @@ Kubernetes configuration deployment
 
 https://rubygems.org/gems/hoobskubes
 
-### [📺 See it in action!](http://h8s.io/hoobskubes.m4v)
+### [📺 See it in action!](http://redacted/hoobskubes.m4v)
 
 ## About
 This is a clunky and ill-advised gem designed to make it easy to apply your kubernetes yaml files.
